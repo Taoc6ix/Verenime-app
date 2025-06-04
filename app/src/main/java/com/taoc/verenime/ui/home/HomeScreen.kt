@@ -1,0 +1,176 @@
+package com.taoc.verenime.ui.home
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.taoc.verenime.R
+import com.taoc.verenime.ui.AnimeCard
+
+@Composable
+fun HomeScreen(
+    viewModel: HomeViewModel,
+    onSearchClick: () -> Unit,
+    onOngoingClick: (Int) -> Unit,
+    onAnimeClick: (String) -> Unit
+) {
+    val ongoingAnime by viewModel.ongoingAnime.collectAsState()
+    val allAnime by viewModel.allAnime.collectAsState()
+    val completedAnime by viewModel.completedAnime.collectAsState()
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(Color(0xFF181A20))
+        .verticalScroll(rememberScrollState())) {
+        // Header
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ac_ic),
+                contentDescription = null,
+                modifier = Modifier.size(48.dp).clip(CircleShape)
+
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Text("Selamat Datang", color = Color.White, fontSize = 12.sp)
+                Text("Vernius Vereniaes", color = Color.White, fontWeight = FontWeight.Bold)
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(onClick = onSearchClick) {
+                Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
+            }
+        }
+
+        // Reminder
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .background(Color(0xFF23243A), shape = RoundedCornerShape(12.dp))
+                .padding(16.dp)
+        ) {
+            Text(
+                "⚠\uFE0E Jika fitur pencarian tidak menemukan hasil " +
+                        "mungkin developer sedang galau " +
+                        "jadi anime yang kamu cari belum tersedia. \uD83E\uDD7A\uD83E\uDD40❤\uFE0F\u200D\uD83E\uDE79",
+                color = Color.White,
+                textAlign = TextAlign.Justify
+            )
+        }
+
+        //Gambar static galau abies
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 6.dp)
+        ) {
+            items(listOf(R.drawable.card1, R.drawable.card2, R.drawable.card3)) { imageRes ->
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .width(320.dp)
+                        .height(164.dp)
+                )
+            }
+        }
+
+        // Ongoing Update
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Ongoing Update", color = Color.White, fontWeight = FontWeight.Bold)
+            TextButton(onClick = { onOngoingClick(1) }) {
+                Text("Lihat Jadwal", color = Color(0xFF7B61FF))
+            }
+        }
+        LazyRow(modifier = Modifier.padding(horizontal = 8.dp)) {
+            items(ongoingAnime) { anime ->
+                AnimeCard(anime, onClick = { onAnimeClick(anime.animeId) })
+            }
+        }
+
+        Button(
+            onClick = { /* Navigasi ke semua anime */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text("Tampilkan Semua Anime")
+        }
+
+//        // Anime
+//        Text("Anime", color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 0.dp))
+//        LazyRow {
+//            items(allAnime) { anime ->
+//                AnimeCard(anime, onClick = { onAnimeClick(anime.animeId) })
+//            }
+//        }
+
+        // Anime Sudah Tamat
+        Text("Anime Sudah Tamat", color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 0.dp))
+        LazyRow(modifier = Modifier.padding(horizontal = 8.dp)) {
+            items(completedAnime) { anime ->
+                AnimeCard(anime, onClick = { onAnimeClick(anime.animeId) })
+            }
+        }
+
+        // Reminder
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .background(Color(0xFF23243A), shape = RoundedCornerShape(12.dp))
+                .padding(16.dp)
+        ) {
+            Text(
+                "\uD83D\uDCE2 Kuberanikan diri untuk kembali menulis code kehidupan, meski bug di hatiku masih belum teratasi. " +
+                        "Kau tak memilihku, dan itu adalah error terbesar yang pernah kubaca. Tapi seperti aplikasi yang harus terus berjalan, " +
+                        "aku pun akan terus berusaha, mencari patch untuk menyembuhkan luka ini, dan berharap suatu saat nanti ada update kebahagiaan yang baru.",
+                color = Color.White,
+                textAlign = TextAlign.Justify
+            )
+        }
+    }
+}

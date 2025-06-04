@@ -1,0 +1,39 @@
+package com.taoc.verenime.api.responses
+
+data class StreamingResponse(
+    val statusCode: Int,
+    val statusMessage: String?,
+    val ok: Boolean,
+    val data: StreamingData
+
+)
+
+data class StreamingData(
+    val title: String,
+    val animeId: String,
+    val defaultStreamingUrl: String,
+    val serverId: String,
+    val episodeNumber: Int,
+    val episodeList: List<Episode>
+)
+
+data class Episode(
+    val id: String,
+    val title: String,
+    val date: String
+)
+
+data class ServerData(
+    val qualities: List<QualityData>
+)
+
+data class QualityData(
+    val title: String,
+    val serverList: List<ServerItem>
+)
+
+data class ServerItem(
+    val title: String,
+    val serverId: String,
+    val href: String
+)
