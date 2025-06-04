@@ -2,7 +2,7 @@ package com.taoc.verenime.api.service
 
 import com.taoc.verenime.api.responses.AnimeListResponse
 import com.taoc.verenime.api.responses.DetailAnimeResponse
-import com.taoc.verenime.api.responses.StreamingResponse
+import com.taoc.verenime.api.responses.WatchResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -30,10 +30,10 @@ interface ApiService {
     ): AnimeListResponse
 
     @GET("episode/{episodeId}")
-    suspend fun getStreamingData(@Path("episodeId") episodeId: String): StreamingResponse
-
-    @GET("server/{serverId}")
-    suspend fun getServerData(@Path("serverId") serverId: String): StreamingResponse
+    suspend fun getStreamingData(
+        @Path("episodeId") episodeId: String,
+        @Query("serverId") serverId: String? = null
+    ): WatchResponse
 
     companion object {
         private const val BASE_URL = "http://192.168.1.100:3001/otakudesu/"

@@ -3,26 +3,22 @@ package com.taoc.verenime
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.taoc.verenime.api.service.ApiService
 import com.taoc.verenime.ui.detail.DetailScreen
 import com.taoc.verenime.ui.detail.DetailViewModel
 import com.taoc.verenime.ui.home.HomeScreen
 import com.taoc.verenime.ui.home.HomeViewModel
 import com.taoc.verenime.ui.search.SearchScreen
 import com.taoc.verenime.ui.search.SearchViewModel
-import com.taoc.verenime.ui.streaming.StreamingScreen
 import com.taoc.verenime.ui.theme.VerenimeTheme
+import com.taoc.verenime.ui.watch.WatchRepository
+import com.taoc.verenime.ui.watch.WatchScreen
+import com.taoc.verenime.ui.watch.WatchViewModel
+import com.taoc.verenime.ui.watch.WatchViewModelFactory
 
 
 class MainActivity : ComponentActivity() {
@@ -34,6 +30,8 @@ class MainActivity : ComponentActivity() {
                 val homeViewModel: HomeViewModel = viewModel()
                 val detailViewModel: DetailViewModel = viewModel()
                 val searchViewModel: SearchViewModel = viewModel()
+                val watchViewModelFactory = WatchViewModelFactory(WatchRepository(ApiService.create()))
+                val watchViewModel: WatchViewModel = viewModel(factory = watchViewModelFactory)
 
 
                 NavHost(navController, startDestination = "home") {
@@ -66,12 +64,15 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                    composable("streaming/{animeId}/{episodeId}") { backStackEntry ->
-                        val animeId = backStackEntry.arguments?.getString("animeId") ?: ""
-                        val episodeId = backStackEntry.arguments?.getString("episodeId") ?: ""
-                        StreamingScreen(animeId = animeId, episodeId = episodeId, onBack = { navController.popBackStack() })
-                    }
 
+                    composable("streaming/{animeId}/{episodeId}") { backStackEntry ->
+                        val episodeId = backStackEntry.arguments?.getString("episodeId") ?: ""
+                        WatchScreen(
+                            episodeId = episodeId,
+                            viewModel = watchViewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
             }
         }

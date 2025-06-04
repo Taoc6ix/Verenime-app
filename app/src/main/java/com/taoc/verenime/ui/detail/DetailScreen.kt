@@ -143,7 +143,7 @@ import com.taoc.verenime.R
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 500.dp) // agar bisa discroll sampai bawah
+                        .heightIn(max = 500.dp)
                         .padding(horizontal = 24.dp)
                 ) {
                     items(anime.episodeList ?: emptyList()) { episode ->
@@ -166,7 +166,7 @@ import com.taoc.verenime.R
                                         .fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text(episode.title ?: "▶\uFE0F", color = Color.White)
+                                    Text(episode.title ?: "", color = Color.White)
                                     Text(
                                         episode.date ?: "▶\uFE0F",
                                         color = Color.White,

@@ -87,4 +87,10 @@ dependencies {
     //navigation
     implementation(libs.androidx.navigation.compose)
 
+    //webview
+    implementation(libs.androidx.webkit)
+
+    implementation(libs.androidx.foundation)
+
+
 }
